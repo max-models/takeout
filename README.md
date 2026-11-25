@@ -1,87 +1,78 @@
-# template-python
+# takeout
 
 
 <!-- README.md is generated from README.qmd: edit the .qmd and run `make readme`. -->
 
-[![Tests](https://github.com/max-models/template-python/actions/workflows/test_pytest.yml/badge.svg)](https://github.com/max-models/template-python/actions/workflows/test_pytest.yml)
+[![Tests](https://github.com/max-models/takeout/actions/workflows/test_pytest.yml/badge.svg)](https://github.com/max-models/takeout/actions/workflows/test_pytest.yml)
 [![Static
-analysis](https://github.com/max-models/template-python/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/max-models/template-python/actions/workflows/static_analysis.yml)
-[![Docs](https://github.com/max-models/template-python/actions/workflows/docs.yml/badge.svg)](https://max-models.github.io/template-python/)
-[![codecov](https://codecov.io/gh/max-models/template-python/branch/main/graph/badge.svg)](https://codecov.io/gh/max-models/template-python)
-[![PyPI](https://img.shields.io/pypi/v/template-python.png)](https://pypi.org/project/template-python/)
-[![Python](https://img.shields.io/pypi/pyversions/template-python.png)](https://pypi.org/project/template-python/)
+analysis](https://github.com/max-models/takeout/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/max-models/takeout/actions/workflows/static_analysis.yml)
+[![Docs](https://github.com/max-models/takeout/actions/workflows/docs.yml/badge.svg)](https://max-models.github.io/takeout/)
+[![codecov](https://codecov.io/gh/max-models/takeout/branch/main/graph/badge.svg)](https://codecov.io/gh/max-models/takeout)
+[![PyPI](https://img.shields.io/pypi/v/takeout.png)](https://pypi.org/project/takeout/)
+[![Python](https://img.shields.io/pypi/pyversions/takeout.png)](https://pypi.org/project/takeout/)
 
-Template repository for Python projects: a `src/` package with a console
-entry point, `pytest` tests, GitHub Actions for tests, static analysis,
-example notebooks, documentation and PyPI publishing, and an
-[Astro](https://astro.build/) +
-[Starlight](https://starlight.astro.build/) documentation site.
+Gridded data that crosses between the max-models codes, as xarray
+datasets with fixed names, dims and units:
 
-Documentation: <https://max-models.github.io/template-python/>
+- **the output format** (`takeout.output`): one layout for the output of
+  any model, with the grid moments of each species, the fields, marker
+  samples and the run’s provenance; a validator that lists what a
+  dataset gets wrong, and netCDF files that are checked on writing and
+  on reading;
+- **field maps** (`takeout.field_map`): external fields on a grid
+  (magnet and coil maps, fields computed offline), read, written and
+  interpolated multilinearly to any position.
 
-## Use the template
+picnic and beamtracer write and read these layouts, and other codes’
+readers (SAPIC’s) produce them, so plots, diagnostics and code-to-code
+comparisons do not depend on which code made a run.
 
-Create a repository from this template, then rename the package:
-
-``` bash
-bash setup_project.sh my-app
-rm setup_project.sh
-```
-
-This replaces `template-python` with `my-app` everywhere, moves
-`src/app` to `src/my_app`, and points the entry point, tests and docs at
-it.
+Documentation: <https://max-models.github.io/takeout/>
 
 ## Install
 
-With [uv](https://docs.astral.sh/uv/):
+``` bash
+pip install takeout
+```
+
+or from a checkout, with the test, docs and development tools:
 
 ``` bash
 make install    # uv sync --extra dev, plus the pre-commit hooks
-uv run template-python
+pip install -e ".[dev]"   # the same with pip
 ```
 
-Or create and activate a Python environment (3.10 or newer):
+## Example
 
-``` bash
-python -m venv env
-source env/bin/activate
-pip install --upgrade pip
+``` python
+import numpy as np
+import takeout
+
+field_map = takeout.FieldMap.from_function(
+    lambda p: np.stack([0.05 + 0 * p[:, 0], 0 * p[:, 0], 0 * p[:, 0]], axis=1),
+    {"x": np.linspace(0.0, 0.1, 11)},
+    kind="magnetic",
+    source="uniform 50 mT",
+)
+field_map.write("uniform.nc")
+takeout.FieldMap.read("uniform.nc").magnetic_field(np.array([[0.03, 0.0, 0.0]]))
 ```
 
-Install the code and requirements with pip:
-
-``` bash
-pip install -e .
-```
-
-Run the code with:
-
-``` bash
-template-python
-```
-
-The `test`, `docs` and `dev` extras install the test runner, the
-documentation tooling and the linters:
-
-``` bash
-pip install -e ".[dev]"
-```
+A run is checked against the output format with `takeout.validate(ds)`
+(a list of problems, empty when it follows the format), stored with
+`takeout.write(ds, "run.nc")` and loaded with `takeout.read("run.nc")`.
 
 ## Development
 
-Formatting and linting use [ruff](https://docs.astral.sh/ruff/), type
-checking [pyright](https://microsoft.github.io/pyright/), run by
+Formatting and linting use [ruff](https://docs.astral.sh/ruff/) and
+[ssort](https://github.com/bwhmather/ssort), type checking
+[pyright](https://microsoft.github.io/pyright/), run by
 [pre-commit](https://pre-commit.com/) and in CI:
 
 ``` bash
-make lint     # ruff check, ruff format --check, pyright
+make lint     # ruff check, ruff format --check, ssort, pyright
 make test     # pytest with coverage
 ```
-
-Commit messages follow [Conventional
-Commits](https://www.conventionalcommits.org/); see
-[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Build docs
 
@@ -96,7 +87,7 @@ Node 22 or newer.
 make docs-install     # npm packages and the Python docs extra
 make docs-notebooks   # execute tutorials/*.ipynb and convert them to pages
 make docs-examples    # run examples/*.py and publish their plots
-make docs-dev         # live preview at http://localhost:4321/template-python/
+make docs-dev         # live preview at http://localhost:4321/takeout/
 make docs-build       # the static site in docs/dist
 ```
 
@@ -112,9 +103,8 @@ make readme
 ## Releases
 
 Before merging a release to `main`, update the version in
-`pyproject.toml`, `src/app/__init__.py` and `CITATION.cff` (including
-its release date), and add the release notes to `CHANGELOG.md`. The push
+`pyproject.toml` and add the release notes to `CHANGELOG.md`. The push
 to `main` creates a GitHub release with a `vX.Y.Z` tag and publishes the
 package to PyPI with trusted publishing (OIDC). The one-time PyPI and
 GitHub configuration is described in the [publishing
-tutorial](https://max-models.github.io/template-python/development/publishing/).
+tutorial](https://max-models.github.io/takeout/development/publishing/).

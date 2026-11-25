@@ -1,44 +1,73 @@
 ---
 title: Quickstart
-description: Run the command line entry point of template-python.
+description: Check a dataset against the output format, store it, and interpolate a field map.
 ---
 
-First, ensure that `template-python` is [installed](/template-python/getting-started/installation/).
+First, ensure that `takeout` is [installed](/takeout/getting-started/installation/).
 
-## Basic usage
+## The output format
 
-After installation, you can run the application with:
-
-```bash
-template-python
-```
-
-which calls `app.main.main` and prints a greeting.
-
-## Use the package from Python
+A dataset in the output format has the dims `t`, `species` and `x` (then `y`, `z`) in that
+order, a `units` attribute on every coordinate and variable, and global attributes saying
+which layout it is, its frame, the species' mass and charge and its provenance:
 
 ```python
-from app.main import main
+import numpy as np
+import xarray as xr
 
-main()
+import takeout
+
+x = np.linspace(0.0, 0.02, 33)
+run = xr.Dataset(
+    {"potential": (("x",), np.sin(np.pi * x / 0.02), {"units": "V"})},
+    coords={"x": ("x", x, {"units": "m"})},
+    attrs={
+        "Conventions": takeout.FORMAT,
+        "frame": "cartesian",
+        **takeout.provenance("takeout"),
+    },
+)
+assert takeout.validate(run) == []
+takeout.write(run, "run.nc")
+back = takeout.read("run.nc")
 ```
 
-See the [API reference](/template-python/api/app/) for every module and function.
+`validate` returns one message per problem (an empty list when the dataset follows the
+format), `check` raises a `FormatError` listing them, and `write` and `read` check the
+dataset on the way to and from the file. The [Output format](/takeout/examples/output-format/)
+example builds a run with two species and marker samples.
+
+## Field maps
+
+```python
+from takeout import FieldMap
+
+field_map = FieldMap.from_arrays(
+    {"x": [0.0, 0.05, 0.1]}, {"b_field_x": [0.15, 0.05, 0.15]}, source="three nodes"
+)
+field_map.write("mirror.nc")
+FieldMap.read("mirror.nc").magnetic_field(np.array([[0.025, 0.0, 0.0]]))  # (1, 3), T
+```
+
+A map with fewer dims than the positions is uniform along the others; outside the grid the
+field is clipped to the boundary nodes (`outside="clip"`), zero (`"zero"`) or an error
+(`"error"`). See the [Field maps](/takeout/examples/field-maps/) example.
+
+See the [API reference](/takeout/api/takeout/) for every module and function.
 
 ## Profiling
 
-template-python's coarse operations are [scope-profiler](https://github.com/max-models/scope-profiler)
-regions (`template_python.main` here), tagged with the opt-in tag `template_python`: they are
-off by default and cost a fraction of a microsecond per call. A code that profiles itself with
-scope-profiler turns them on with the tag:
+takeout's file input and output are [scope-profiler](https://github.com/max-models/scope-profiler)
+regions (`takeout.write`, `takeout.read`, `takeout.field_map_read`, `takeout.field_map_write`),
+tagged with the opt-in tag `takeout`: they are off by default and cost a fraction of a
+microsecond per call. A code that profiles itself with scope-profiler turns them on with the
+tag:
 
 ```python
 import scope_profiler as sp
 
-sp.setup(enable_tags=["template_python"])
+sp.setup(enable_tags=["takeout"])
 ```
 
-or without editing the code, with `SCOPE_PROFILER_ENABLE_TAGS=template_python`,
-`scope-profiler run --enable-tag template_python` or `enable_tags = ["template_python"]` in the
-TOML configuration. New regions use `@sp.profile("template_python.<name>", tags=PROFILE_TAGS)`
-with `PROFILE_TAGS` from the package's `_profiling` module.
+or without editing the code, with `SCOPE_PROFILER_ENABLE_TAGS=takeout` or
+`scope-profiler run --enable-tag takeout`.

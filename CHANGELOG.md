@@ -5,31 +5,15 @@ format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Fixed
-
-- `setup_project.sh` also renames the docs smoke paths (`api/app/...` in `docs.yml`), so the
-  docs build of a new project no longer looks for the template's API pages.
-
 ### Added
 
-- Opt-in scope-profiler regions, as in plasmacoll, wellbalanced and patchwork: `_profiling.py`
-  with the package's tag (`template_python`, renamed by `setup_project.sh`), registered on
-  import, and an example region on `main`. Off unless the application enables the tag (e.g.
-  `scope_profiler.setup(enable_tags=["template_python"])`). Adds the `scope-profiler>=0.7.5`
-  dependency.
-- `PyPI dependencies` workflow and `scripts/check_pypi_dependencies.py`: on every pull request to
-  `main`, fail if a dependency is a direct reference (`name @ git+https://...`), is not on PyPI, or
-  has a version range that no release satisfies, instead of failing the release after the merge.
-
-### Changed
-
-- `__version__` is read from the installed package metadata (`importlib.metadata`), not hardcoded,
-  so it can no longer disagree with `pyproject.toml` (a hardcoded one went stale in releases).
-
-## [0.1.0] - 2026-10-05
-
-### Added
-
-- Package layout with a console entry point and pytest tests.
-- Astro + Starlight documentation site with executed tutorials and a generated API reference.
-- GitHub Actions for tests, ruff, pyright, tutorials, documentation and PyPI publishing.
+- `takeout.output`: the output format of the max-models codes (moved from picnic's
+  `picnic.input_output.output_format`): the layout, `validate` and `check`, `write` and
+  `read` (netCDF, checked both ways), `marker_samples`, `moment_units`, `parse_frame_axes`
+  and `provenance`, which now takes the code first and finds its checkout itself.
+- `takeout.field_map`: field maps (`FieldMap`, `validate_field_map`, `FIELD_MAP_FORMAT`),
+  merged from picnic's `picnic.parameters.field_map` and beamtracer's copy
+  `beamtracer.field_map`, with beamtracer's method card of the interpolation and its
+  `points_function` and `plane_function`.
+- One error class, `FormatError`, for both layouts; opt-in scope-profiler regions on the
+  file input and output; the "Output format" and "Field maps" examples.

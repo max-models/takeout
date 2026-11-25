@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 import scope_profiler as sp
 
-from app.main import main
+from takeout import FieldMap
 
 
 @pytest.fixture(autouse=True)
@@ -17,19 +17,22 @@ def _fresh_profiler(monkeypatch):
     sp.reset()
 
 
-def _region_names(**setup_kwargs) -> set[str]:
+def _region_names(tmp_path, **setup_kwargs) -> set[str]:
     sp.setup(output=None, **setup_kwargs)
     # an application region, recorded either way
     with sp.region("user.run"):
-        main()
+        FieldMap.from_arrays({"x": [0.0, 1.0]}, {"b_field_z": [0.0, 1.0]}).write(
+            tmp_path / "map.nc"
+        )
     results = sp.finalize(verbose=False, return_results=True)
     return set(results.region_names)
 
 
-def test_regions_are_off_by_default() -> None:
-    assert _region_names() == {"user.run"}
+def test_regions_are_off_by_default(tmp_path) -> None:
+    assert _region_names(tmp_path) == {"user.run"}
 
 
-@pytest.mark.parametrize("tags", [["template_python"], ["*"]])
-def test_enabling_the_tag_records_the_regions(tags: list[str]) -> None:
-    assert _region_names(enable_tags=tags) == {"template_python.main", "user.run"}
+@pytest.mark.parametrize("tags", [["takeout"], ["*"]])
+def test_enabling_the_tag_records_the_regions(tmp_path, tags: list[str]) -> None:
+    names = _region_names(tmp_path, enable_tags=tags)
+    assert names == {"takeout.field_map_write", "user.run"}
