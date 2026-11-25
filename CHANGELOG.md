@@ -5,6 +5,10 @@ format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-25
+
+First release.
+
 ### Added
 
 - `takeout.output`: the output format of the max-models codes (moved from picnic's
@@ -17,3 +21,4 @@ format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `points_function` and `plane_function`.
 - One error class, `FormatError`, for both layouts; opt-in scope-profiler regions on the
   file input and output; the "Output format" and "Field maps" examples.
+- `AXES`, the order of the spatial dims.
