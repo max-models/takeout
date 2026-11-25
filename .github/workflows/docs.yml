@@ -28,10 +28,12 @@ jobs:
       smoke-paths: |
         getting-started/installation/index.html
         examples/index.html
-        examples/example-tutorial/index.html
+        examples/output-format/index.html
+        examples/field-maps/index.html
         example-scripts/index.html
-        example-scripts/sine-wave/index.html
-        api/app/index.html
-        api/app/main/index.html
-        examples/example-tutorial/example_tutorial.ipynb
-        example-scripts/sine-wave/plot-1.png
+        example-scripts/mirror-field-map/index.html
+        api/takeout/index.html
+        api/takeout/output/index.html
+        api/takeout/field_map/index.html
+        examples/field-maps/field_maps.ipynb
+        example-scripts/mirror-field-map/plot-1.png

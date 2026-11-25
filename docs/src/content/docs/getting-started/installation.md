@@ -1,9 +1,15 @@
 ---
 title: Installation
-description: Create a Python environment and install template-python.
+description: Create a Python environment and install takeout.
 ---
 
-Create and activate a Python environment:
+From PyPI:
+
+```bash
+pip install takeout
+```
+
+From a checkout, create and activate a Python environment (3.10 or newer):
 
 ```bash
 python -m venv env
@@ -11,24 +17,21 @@ source env/bin/activate
 pip install --upgrade pip
 ```
 
-Install the package and its requirements with pip:
+and install the package and its requirements with pip:
 
 ```bash
 pip install -e .
 ```
 
-Run the code with:
-
-```bash
-template-python
-```
+It needs NumPy, SciPy, xarray, methodcard (the method card of the interpolation) and
+scope-profiler.
 
 ## Optional extras
 
 | Extra  | Installs                                                |
 | ------ | ------------------------------------------------------- |
 | `test` | `pytest` and `coverage`                                 |
-| `docs` | the notebook runner and griffe for the API reference    |
+| `docs` | the notebook runner, griffe for the API reference, plasma-plots for the figures |
 | `dev`  | formatters and linters, plus the `test` and `docs` extras |
 
 ```bash
