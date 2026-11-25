@@ -30,10 +30,12 @@ jobs:
         examples/index.html
         examples/output-format/index.html
         examples/field-maps/index.html
+        examples/analyses/index.html
         example-scripts/index.html
         example-scripts/mirror-field-map/index.html
         api/takeout/index.html
         api/takeout/output/index.html
         api/takeout/field_map/index.html
+        api/takeout/analysis/instabilities/index.html
         examples/field-maps/field_maps.ipynb
         example-scripts/mirror-field-map/plot-1.png
