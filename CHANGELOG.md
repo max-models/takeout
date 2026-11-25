@@ -5,6 +5,17 @@ format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `takeout.analysis`: the analyses of picnic's post-processing, moved here as functions of
+  datasets without picnic: `instabilities` (`instability_report`, `populations` and the
+  report's classes, reading an instability record), `exb` (`dominant_mode`),
+  `rotating_frame` (`rotate`, `to_rotating_frame`) and `ion_acoustic`
+  (`plasma_dispersion`, `dielectric`, `ion_acoustic_root` with explicit plasma
+  parameters, `measure`).
+- The `analysis` extra (plasma-plots, for `takeout.analysis.instabilities`) and the
+  "Instabilities and waves" example.
+
 ## [0.1.0] - 2026-11-25
 
 First release.

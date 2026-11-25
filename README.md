@@ -21,7 +21,11 @@ datasets with fixed names, dims and units:
   on reading;
 - **field maps** (`takeout.field_map`): external fields on a grid
   (magnet and coil maps, fields computed offline), read, written and
-  interpolated multilinearly to any position.
+  interpolated multilinearly to any position;
+- **analyses** (`takeout.analysis`): functions of these datasets that do
+  not need the code that ran: the detection and naming of instabilities
+  (with the `analysis` extra), the ion-acoustic dispersion relation, the
+  dominant wave of E x B runs and rotating frames.
 
 picnic and beamtracer write and read these layouts, and other codes’
 readers (SAPIC’s) produce them, so plots, diagnostics and code-to-code

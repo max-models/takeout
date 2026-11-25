@@ -3,7 +3,9 @@
 - :mod:`takeout.output`: one ``xarray.Dataset`` layout for model output (fields,
   moments, marker samples, provenance), its validator and netCDF files;
 - :mod:`takeout.field_map`: gridded external fields in the same coordinates and units,
-  read, written and interpolated (:class:`~takeout.field_map.FieldMap`).
+  read, written and interpolated (:class:`~takeout.field_map.FieldMap`);
+- :mod:`takeout.analysis`: analyses of model output (instabilities, waves, rotating
+  frames), imported by submodule.
 """
 
 from importlib.metadata import PackageNotFoundError, version

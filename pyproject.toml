@@ -29,13 +29,15 @@ dependencies = [
   "scope-profiler>=0.8.0",
   "xarray",
 ]
+# takeout.analysis.instabilities: growth detection, Penrose and the kinetic dispersion relation
+optional-dependencies.analysis = [ "plasma-plots>=0.3.0" ]
 optional-dependencies.dev = [
   "jupyterlab",
   "pre-commit",
   "pyproject-fmt",
   "pyright",
   "ruff",
-  "takeout[docs,test]",
+  "takeout[analysis,docs,test]",
 ]
 optional-dependencies.docs = [
   "griffe",
@@ -48,7 +50,7 @@ optional-dependencies.docs = [
   # the docs figures: interactive Plotly web figures in the site's colours
   "plasma-plots[web]>=0.2.5",
 ]
-optional-dependencies.test = [ "pytest", "pytest-cov" ]
+optional-dependencies.test = [ "pytest", "pytest-cov", "takeout[analysis]" ]
 urls.Source = "https://github.com/max-models/takeout"
 
 [project.entry-points."scope_profiler.opt_in_tags"]

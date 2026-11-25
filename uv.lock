@@ -4380,6 +4380,9 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+analysis = [
+    { name = "plasma-plots" },
+]
 dev = [
     { name = "griffe" },
     { name = "ipykernel", version = "7.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -4414,6 +4417,7 @@ docs = [
     { name = "plasma-plots", extra = ["web"] },
 ]
 test = [
+    { name = "plasma-plots" },
     { name = "pytest" },
     { name = "pytest-cov" },
 ]
@@ -4430,6 +4434,7 @@ requires-dist = [
     { name = "nbformat", marker = "extra == 'docs'", specifier = ">=5.11.1" },
     { name = "numpy" },
     { name = "pandas", marker = "extra == 'docs'" },
+    { name = "plasma-plots", marker = "extra == 'analysis'", git = "https://github.com/max-models/plasma-plots?branch=devel" },
     { name = "plasma-plots", extras = ["web"], marker = "extra == 'docs'", git = "https://github.com/max-models/plasma-plots?branch=devel" },
     { name = "pre-commit", marker = "extra == 'dev'" },
     { name = "pyproject-fmt", marker = "extra == 'dev'" },
@@ -4439,10 +4444,11 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "scipy" },
     { name = "scope-profiler", git = "https://github.com/max-models/scope-profiler?branch=devel" },
-    { name = "takeout", extras = ["docs", "test"], marker = "extra == 'dev'" },
+    { name = "takeout", extras = ["analysis"], marker = "extra == 'test'" },
+    { name = "takeout", extras = ["analysis", "docs", "test"], marker = "extra == 'dev'" },
     { name = "xarray" },
 ]
-provides-extras = ["dev", "docs", "test"]
+provides-extras = ["analysis", "dev", "docs", "test"]
 
 [[package]]
 name = "terminado"
