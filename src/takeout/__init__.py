@@ -13,6 +13,7 @@ import scope_profiler as sp
 from takeout._profiling import PROFILE_TAGS
 from takeout.field_map import FIELD_MAP_FORMAT, FieldMap, validate_field_map
 from takeout.output import (
+    AXES,
     FORMAT,
     FRAMES,
     PROVENANCE,
@@ -28,6 +29,7 @@ from takeout.output import (
 )
 
 __all__ = [
+    "AXES",
     "FIELD_MAP_FORMAT",
     "FORMAT",
     "FRAMES",

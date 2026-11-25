@@ -91,6 +91,7 @@ from takeout._common import (
 from takeout._profiling import PROFILE_TAGS
 
 __all__ = [
+    "AXES",
     "FORMAT",
     "FRAMES",
     "PROVENANCE",
